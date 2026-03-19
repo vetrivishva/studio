@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Jost:wght@300;400;500&family=Libre+Baskerville:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root{
+  --cream:#f5f0e8;--linen:#ede6d8;--sand:#e0d6c4;--dune:#cfc4ad;
+  --bark:#a89070;--terra:#c2440e;--ember:#e05a22;
+  --coal:#1e160e;--ink:#2e2218;--stone:#5a4a38;--fog:#8a7a68;
+  --border:rgba(90,74,56,.13);--border2:rgba(90,74,56,.22);
+  --shadow:rgba(30,22,14,.10);--shadow2:rgba(30,22,14,.22);
+}
+[data-theme="dark"]{
+  --cream:#161008;--linen:#1e160e;--sand:#28200e;--dune:#342c18;
+  --bark:#6a5a42;--terra:#d45518;--ember:#e86a30;
+  --coal:#f0e8d8;--ink:#e0d4c0;--stone:#c0b09a;--fog:#887868;
+  --border:rgba(240,232,216,.1);--border2:rgba(240,232,216,.18);
+  --shadow:rgba(0,0,0,.4);--shadow2:rgba(0,0,0,.6);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--coal);min-height:100vh;overflow-x:hidden;transition:background .4s,color .4s}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--linen)}::-webkit-scrollbar-thumb{background:var(--dune);border-radius:3px}
+
+/* ── ANIMATIONS ── */
+@keyframes riseUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideInLeft{from{opacity:0;transform:translateX(-32px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideInRight{from{opacity:0;transform:translateX(32px)}to{opacity:1;transform:translateX(0)}}
+@keyframes scaleIn{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+@keyframes loginReveal{0%{opacity:0;transform:translateY(40px) scale(.97)}100%{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes barSlide{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes iconPop{0%{opacity:0;transform:scale(.6) rotate(-12deg)}100%{opacity:1;transform:scale(1) rotate(0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+@keyframes panelIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sPulse{0%,100%{opacity:.5;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.2)}}
+@keyframes cardFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes mobileMenuIn{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 52px;background:rgba(245,240,232,.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);transition:background .4s}
+[data-theme="dark"] nav{background:rgba(22,16,8,.92)}
+.nav-logo{display:flex;align-items:center;gap:14px;text-decoration:none}
+.nav-mark{width:38px;height:38px;border:1.5px solid var(--terra);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:17px;color:var(--terra);overflow:hidden;position:relative;flex-shrink:0}
+.nav-mark img{width:100%;height:100%;object-fit:contain;padding:4px;display:none}
+.nav-mark img.show{display:block}
+.nav-mark img.show+span{display:none}
+.nav-name{font-family:'Playfair Display',serif;font-size:16px;font-weight:500;color:var(--coal);letter-spacing:.02em}
+.nav-links{display:flex;gap:38px;list-style:none}
+.nav-links a{font-family:'Jost',sans-serif;font-weight:400;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--stone);text-decoration:none;transition:color .2s;position:relative}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:-3px;width:0;height:1.5px;background:var(--terra);transition:width .25s}
+.nav-links a:hover{color:var(--terra)}
+.nav-links a:hover::after{width:100%}
+.nav-actions{display:flex;align-items:center;gap:14px}
+.theme-pill{width:48px;height:26px;background:var(--sand);border:1px solid var(--border2);border-radius:13px;cursor:pointer;position:relative;transition:background .3s;flex-shrink:0}
+.theme-pill::after{content:'';width:20px;height:20px;background:var(--terra);border-radius:50%;position:absolute;top:2px;left:2px;transition:transform .3s}
+[data-theme="dark"] .theme-pill::after{transform:translateX(22px)}
+.btn-admin{font-family:'Jost',sans-serif;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:9px 22px;border:1.5px solid var(--terra);background:transparent;color:var(--terra);cursor:pointer;transition:all .25s;position:relative;overflow:hidden;white-space:nowrap}
+.btn-admin::before{content:'';position:absolute;inset:0;background:var(--terra);transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
+.btn-admin:hover::before{transform:translateY(0)}
+.btn-admin:hover{color:var(--cream)}
+.btn-admin span{position:relative;z-index:1}
+/* hamburger */
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
+.hamburger span{display:block;width:22px;height:2px;background:var(--terra);transition:all .3s}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+/* mobile menu */
+.mobile-menu{
+  display:none;position:fixed;top:68px;left:0;right:0;z-index:199;
+  background:rgba(245,240,232,.97);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:24px 24px 32px;
+  flex-direction:column;gap:0;
+}
+[data-theme="dark"] .mobile-menu{background:rgba(22,16,8,.97)}
+.mobile-menu.open{display:flex;animation:mobileMenuIn .3s ease}
+.mobile-menu a{font-family:'Jost',sans-serif;font-size:15px;letter-spacing:.1em;text-transform:uppercase;color:var(--stone);text-decoration:none;padding:14px 0;border-bottom:1px solid var(--border);transition:color .2s;opacity:0}
+.mobile-menu.open a{animation:riseUp .4s forwards}
+.mobile-menu.open a:nth-child(1){animation-delay:.05s}
+.mobile-menu.open a:nth-child(2){animation-delay:.1s}
+.mobile-menu.open a:nth-child(3){animation-delay:.15s}
+.mobile-menu a:hover{color:var(--terra)}
+.mobile-menu-actions{display:flex;align-items:center;gap:14px;margin-top:20px;opacity:0}
+.mobile-menu.open .mobile-menu-actions{animation:riseUp .4s .2s forwards}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;align-items:center;padding:100px 52px 80px;position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
+.hero-texture{position:absolute;inset:0;background-image:radial-gradient(ellipse 80% 60% at 70% 40%,rgba(194,68,14,.06) 0%,transparent 60%),radial-gradient(ellipse 40% 40% at 20% 80%,rgba(194,68,14,.04) 0%,transparent 50%);pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:72px 72px;opacity:.6}
+.hero-content{position:relative;z-index:1;max-width:860px}
+.hero-tag{font-family:'Jost',sans-serif;font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--terra);margin-bottom:28px;display:flex;align-items:center;gap:14px;opacity:0;animation:riseUp .8s .1s forwards}
+.hero-tag::before{content:'';width:36px;height:1.5px;background:var(--terra)}
+.hero-h1{font-family:'Playfair Display',serif;font-size:clamp(52px,9vw,128px);font-weight:400;line-height:.92;letter-spacing:-.02em;margin-bottom:36px;opacity:0;animation:riseUp .9s .25s forwards}
+.hero-h1 em{font-style:italic;color:var(--terra)}
+.hero-sub{font-family:'Libre Baskerville',serif;font-size:17px;font-style:italic;color:var(--stone);line-height:1.75;max-width:460px;margin-bottom:52px;opacity:0;animation:riseUp .9s .4s forwards}
+.hero-cta{display:flex;gap:18px;flex-wrap:wrap;opacity:0;animation:riseUp .9s .55s forwards}
+.btn-fill{padding:16px 44px;background:var(--terra);color:var(--cream);font-family:'Jost',sans-serif;font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;border:none;cursor:pointer;text-decoration:none;display:inline-block;transition:all .25s;position:relative;overflow:hidden}
+.btn-fill::after{content:'';position:absolute;inset:0;background:var(--ember);transform:translateX(-100%);transition:transform .3s ease}
+.btn-fill:hover::after{transform:translateX(0)}
+.btn-fill span{position:relative;z-index:1}
+.btn-ghost{padding:15px 44px;border:1.5px solid var(--dune);color:var(--stone);font-family:'Jost',sans-serif;font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;background:transparent;cursor:pointer;text-decoration:none;display:inline-block;transition:all .25s}
+.btn-ghost:hover{border-color:var(--terra);color:var(--terra)}
+/* REMOVED scroll indicator */
+
+/* ── SECTIONS ── */
+section.pub{padding:100px 52px;border-top:1px solid var(--border);opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease}
+section.pub.vis{opacity:1;transform:translateY(0)}
+.sec-tag{font-family:'Jost',sans-serif;font-size:10px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--terra);display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.sec-tag::after{content:'';width:32px;height:1.5px;background:var(--terra)}
+.sec-title{font-family:'Playfair Display',serif;font-size:clamp(32px,4.5vw,58px);font-weight:400;line-height:1.08}
+.sec-title em{font-style:italic;color:var(--terra)}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:64px}
+
+/* ── FILTERS ── */
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:44px}
+.filter-btn{font-family:'Jost',sans-serif;font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:8px 22px;border:1px solid var(--border2);background:transparent;color:var(--stone);cursor:pointer;transition:all .22s}
+.filter-btn.active,.filter-btn:hover{background:var(--terra);border-color:var(--terra);color:var(--cream)}
+
+/* ── PHOTO GRID ── */
+.photo-grid{columns:3;column-gap:14px}
+@media(max-width:900px){.photo-grid{columns:2}}
+@media(max-width:560px){.photo-grid{columns:1}}
+.photo-item{break-inside:avoid;margin-bottom:14px;position:relative;overflow:hidden;background:var(--sand);cursor:pointer}
+.photo-item img{width:100%;height:auto;display:block;transition:transform .55s cubic-bezier(.25,.46,.45,.94);object-fit:cover}
+.photo-item:hover img{transform:scale(1.04)}
+.photo-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(30,22,14,.75) 0%,transparent 55%);opacity:0;transition:opacity .35s;display:flex;align-items:flex-end;padding:18px}
+.photo-item:hover .photo-overlay{opacity:1}
+.photo-cat{font-family:'Jost',sans-serif;font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:rgba(245,240,232,.92)}
+.work-empty{padding:80px;text-align:center;font-family:'Libre Baskerville',serif;font-style:italic;font-size:15px;color:var(--fog);border:1px dashed var(--dune)}
+
+/* ── TEAM ── */
+.team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:24px}
+.team-card{background:var(--linen);border:1px solid var(--border);overflow:hidden;transition:transform .3s,box-shadow .3s}
+.team-card:hover{transform:translateY(-5px);box-shadow:0 20px 48px var(--shadow2)}
+.team-photo{aspect-ratio:3/4;background:var(--sand);overflow:hidden;position:relative}
+.team-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.team-initials{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:52px;font-weight:400;color:var(--dune)}
+.team-info{padding:20px 22px}
+.team-name{font-family:'Playfair Display',serif;font-size:19px;font-weight:500;margin-bottom:6px}
+.team-role{font-family:'Jost',sans-serif;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--terra)}
+
+/* ── CONTACT ── */
+.contact-layout{display:grid;grid-template-columns:1fr 1.1fr;gap:72px}
+.contact-item{display:flex;align-items:flex-start;gap:18px;padding:22px 0;border-bottom:1px solid var(--border)}
+.contact-icon{width:42px;height:42px;flex-shrink:0;border:1px solid var(--dune);display:flex;align-items:center;justify-content:center;color:var(--terra);font-size:17px}
+.c-lbl{font-family:'Jost',sans-serif;font-size:9px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--fog);margin-bottom:5px}
+.c-val{font-family:'Jost',sans-serif;font-size:15px;color:var(--stone)}
+.contact-form{background:var(--linen);border:1px solid var(--border);padding:44px}
+.form-row{margin-bottom:20px}
+.f-label{display:block;font-family:'Jost',sans-serif;font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--fog);margin-bottom:10px}
+.f-input{width:100%;background:var(--cream);border:1px solid var(--border2);color:var(--coal);font-family:'Jost',sans-serif;font-size:14px;padding:12px 16px;outline:none;transition:border-color .2s}
+.f-input:focus{border-color:var(--terra)}
+textarea.f-input{resize:vertical;min-height:110px}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--border);padding:36px 52px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.foot-copy{font-family:'Jost',sans-serif;font-size:12px;letter-spacing:.06em;color:var(--fog)}
+.foot-mark{color:var(--terra)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:28px;right:28px;z-index:9000;background:var(--ink);color:var(--cream);font-family:'Jost',sans-serif;font-size:12px;letter-spacing:.06em;padding:14px 24px;border-left:3px solid var(--terra);transform:translateX(calc(100% + 40px));transition:transform .35s cubic-bezier(.34,1.56,.64,1);min-width:220px;pointer-events:none}
+[data-theme="dark"] .toast{background:var(--sand)}
+.toast.show{transform:translateX(0)}
+.toast.err{border-left-color:#e05a22}
+
+/* ── LIGHTBOX ── */
+.lightbox{position:fixed;inset:0;z-index:9999;background:rgba(20,14,8,.95);display:none;align-items:center;justify-content:center}
+.lightbox.open{display:flex;animation:fadeIn .25s ease}
+.lightbox img{max-width:95vw;max-height:95vh;object-fit:contain;box-shadow:0 32px 80px rgba(0,0,0,.6);animation:scaleIn .3s ease}
+.lb-close{position:absolute;top:20px;right:24px;font-size:28px;color:rgba(245,240,232,.7);cursor:pointer;background:none;border:none;transition:color .2s}
+.lb-close:hover{color:var(--terra)}
+
+/* ═══════════════ ADMIN OVERLAY ═══════════════ */
+/* FIX: admin is a full absolute overlay — no page behind it */
+.adm-overlay{
+  position:fixed;inset:0;z-index:500;display:none;
+  background:var(--cream); /* solid bg so page is NEVER visible */
+}
+.adm-overlay.open{display:block}
+
+/* LOGIN */
+.login-wrap{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:var(--cream);z-index:10}
+.login-card{width:420px;background:var(--linen);border:1px solid var(--border2);position:relative;overflow:hidden;animation:loginReveal .55s cubic-bezier(.22,.68,0,1.2) forwards}
+.login-bar{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--terra),var(--ember),var(--bark));transform-origin:left;animation:barSlide .7s .3s both cubic-bezier(.4,0,.2,1)}
+.login-inner{padding:52px 48px 48px}
+.login-icon{width:52px;height:52px;border:1.5px solid var(--terra);display:flex;align-items:center;justify-content:center;color:var(--terra);font-size:22px;margin-bottom:28px;animation:iconPop .4s .45s both}
+.login-title{font-family:'Playfair Display',serif;font-size:30px;font-weight:400;margin-bottom:6px;animation:riseUp .5s .5s both}
+.login-sub{font-family:'Jost',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--fog);margin-bottom:38px;animation:riseUp .5s .58s both}
+.adm-field{margin-bottom:18px;animation:riseUp .5s .65s both}
+.adm-label{display:block;font-family:'Jost',sans-serif;font-size:10px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--fog);margin-bottom:9px}
+.adm-input{width:100%;background:var(--cream);border:1px solid var(--border2);color:var(--coal);font-family:'Jost',sans-serif;font-size:14px;padding:12px 16px;outline:none;transition:border-color .2s}
+.adm-input:focus{border-color:var(--terra)}
+.adm-input.err{border-color:#e05a22;animation:shake .4s ease}
+.login-error{font-family:'Jost',sans-serif;font-size:12px;color:#c2440e;margin-bottom:14px;display:none;letter-spacing:.03em}
+.login-error.show{display:block}
+.btn-login{width:100%;padding:14px;background:var(--terra);border:none;color:var(--cream);font-family:'Jost',sans-serif;font-size:12px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;position:relative;overflow:hidden;transition:background .25s;animation:riseUp .5s .72s both}
+.btn-login::after{content:'';position:absolute;inset:0;background:var(--ember);transform:translateX(-100%);transition:transform .3s ease}
+.btn-login:hover::after{transform:translateX(0)}
+.btn-login span{position:relative;z-index:1}
+
+/* ADMIN SHELL */
+.adm-shell{display:none;width:100%;height:100vh;overflow:hidden}
+.adm-shell.open{display:flex}
+.adm-sidebar{width:248px;flex-shrink:0;background:var(--linen);border-right:1px solid var(--border);display:flex;flex-direction:column;height:100vh;overflow-y:auto;transition:transform .3s ease}
+.adm-brand{padding:24px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.adm-brand-mark{width:30px;height:30px;border:1.5px solid var(--terra);display:flex;align-items:center;justify-content:center;color:var(--terra);font-size:14px}
+.adm-brand-txt{font-family:'Jost',sans-serif;font-size:10px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--stone)}
+.adm-nav{padding:12px 0;flex:1}
+.adm-grp-label{font-family:'Jost',sans-serif;font-size:9px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--fog);padding:10px 20px 4px}
+.adm-nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;cursor:pointer;font-family:'Jost',sans-serif;font-size:12px;letter-spacing:.04em;color:var(--stone);transition:all .2s;border-left:2.5px solid transparent}
+.adm-nav-item:hover{color:var(--coal);background:var(--sand)}
+.adm-nav-item.act{color:var(--terra);background:rgba(194,68,14,.08);border-left-color:var(--terra)}
+.adm-nav-item svg{width:14px;height:14px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.5}
+.adm-sidebar-foot{padding:18px 20px;border-top:1px solid var(--border)}
+.btn-logout{width:100%;padding:9px;background:transparent;border:1px solid var(--border2);color:var(--fog);font-family:'Jost',sans-serif;font-size:10px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.btn-logout:hover{border-color:#c2440e;color:#c2440e}
+.adm-main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden}
+.adm-topbar{height:60px;flex-shrink:0;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 36px}
+/* mobile admin topbar */
+.adm-menu-btn{display:none;background:none;border:none;color:var(--terra);font-size:20px;cursor:pointer;padding:4px 8px}
+.adm-page-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:400}
+.adm-page-sub{font-family:'Jost',sans-serif;font-size:9px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--fog);margin-top:1px}
+.adm-badge{font-family:'Jost',sans-serif;font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:4px 14px;border:1px solid var(--terra);color:var(--terra);background:rgba(194,68,14,.07)}
+.adm-body{flex:1;overflow-y:auto;padding:36px}
+.adm-panel{display:none}
+.adm-panel.act{display:block;animation:panelIn .3s ease}
+
+/* STATS */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat-box{background:var(--linen);border:1px solid var(--border);padding:22px 20px;position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s}
+.stat-box:hover{transform:translateY(-3px);box-shadow:0 12px 32px var(--shadow)}
+.stat-box::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2.5px;background:linear-gradient(90deg,var(--terra),var(--ember))}
+.stat-num{font-family:'Playfair Display',serif;font-size:36px;font-weight:400;color:var(--terra);line-height:1;margin-bottom:8px}
+.stat-lbl{font-family:'Jost',sans-serif;font-size:9px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--fog)}
+
+/* ADMIN CARD */
+.adm-card{background:var(--linen);border:1px solid var(--border);padding:28px;margin-bottom:22px}
+.adm-card-hd{font-family:'Playfair Display',serif;font-size:17px;font-weight:400;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.af{margin-bottom:16px}
+.al{display:block;font-family:'Jost',sans-serif;font-size:10px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:var(--fog);margin-bottom:8px}
+.ai{width:100%;background:var(--cream);border:1px solid var(--border2);color:var(--coal);font-family:'Jost',sans-serif;font-size:13px;padding:10px 14px;outline:none;transition:border-color .2s}
+.ai:focus{border-color:var(--terra)}
+select.ai{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23a89070'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:30px}
+.af-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.af-sep{font-family:'Jost',sans-serif;font-size:9px;font-weight:500;letter-spacing:.2em;text-transform:uppercase;color:var(--fog);margin:22px 0 16px;padding-top:18px;border-top:1px solid var(--border)}
+.btn-add{padding:10px 28px;background:var(--terra);border:none;color:var(--cream);font-family:'Jost',sans-serif;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:background .2s}
+.btn-add:hover{background:var(--ember)}
+.btn-save{padding:12px 32px;background:var(--terra);border:none;color:var(--cream);font-family:'Jost',sans-serif;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;transition:background .2s}
+.btn-save:hover{background:var(--ember)}
+.badge{font-family:'Jost',sans-serif;font-size:9px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:3px 12px;border:1px solid var(--dune);color:var(--bark)}
+
+/* UPLOAD ZONE */
+.upload-zone{border:2px dashed var(--dune);padding:32px;text-align:center;cursor:pointer;position:relative;transition:all .25s;background:var(--cream)}
+.upload-zone:hover{border-color:var(--terra);background:rgba(194,68,14,.04)}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.up-icon{font-size:26px;color:var(--dune);margin-bottom:10px}
+.up-txt{font-family:'Jost',sans-serif;font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--fog)}
+.up-hint{font-family:'Jost',sans-serif;font-size:10px;color:var(--dune);margin-top:6px}
+
+/* LOGO PREVIEW with remove/replace */
+.logo-prev-area{margin-top:16px;display:none;background:var(--cream);border:1px solid var(--border);padding:20px;text-align:center}
+.logo-prev-area img{max-height:80px;max-width:240px;object-fit:contain;margin-bottom:14px;display:block;margin-left:auto;margin-right:auto}
+.logo-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-logo-action{font-family:'Jost',sans-serif;font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;padding:7px 18px;border:1px solid var(--border2);background:transparent;color:var(--stone);cursor:pointer;transition:all .2s}
+.btn-logo-action:hover{border-color:var(--terra);color:var(--terra)}
+.btn-logo-remove{border-color:rgba(194,68,14,.3);color:#c2440e}
+.btn-logo-remove:hover{background:#c2440e;color:#fff;border-color:#c2440e}
+
+/* ITEM LIST */
+.item-list{margin-bottom:4px}
+.item-row{display:flex;align-items:center;gap:14px;padding:12px 16px;background:var(--cream);border:1px solid var(--border);margin-bottom:8px;animation:riseUp .3s both;transition:border-color .2s}
+.item-row:hover{border-color:var(--border2)}
+.item-thumb{width:52px;height:52px;flex-shrink:0;background:var(--sand);overflow:hidden}
+.item-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.item-init{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:20px;color:var(--bark)}
+.item-body{flex:1;min-width:0}
+.item-name{font-family:'Jost',sans-serif;font-size:14px;font-weight:500;color:var(--coal)}
+.item-sub{font-family:'Jost',sans-serif;font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--terra);margin-top:2px}
+.item-acts{display:flex;gap:8px}
+.btn-del{width:30px;height:30px;background:transparent;border:1px solid var(--border);color:var(--fog);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .2s}
+.btn-del:hover{border-color:#c2440e;color:#c2440e}
+.empty-msg{padding:32px;text-align:center;font-family:'Libre Baskerville',serif;font-style:italic;font-size:13px;color:var(--dune);border:1px dashed var(--dune)}
+
+/* ── ENQUIRIES (Customer Messages) ── */
+.enq-empty{padding:40px;text-align:center;font-family:'Libre Baskerville',serif;font-style:italic;font-size:14px;color:var(--dune);border:1px dashed var(--dune)}
+.enq-row{background:var(--cream);border:1px solid var(--border);padding:20px 22px;margin-bottom:10px;animation:riseUp .35s both;position:relative;overflow:hidden;transition:border-color .2s,box-shadow .2s}
+.enq-row:hover{border-color:var(--border2);box-shadow:0 4px 16px var(--shadow)}
+.enq-row::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--terra)}
+.enq-row.unread::before{background:var(--ember)}
+.enq-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px}
+.enq-name{font-family:'Playfair Display',serif;font-size:17px;font-weight:500}
+.enq-time{font-family:'Jost',sans-serif;font-size:10px;letter-spacing:.1em;color:var(--fog)}
+.enq-email{font-family:'Jost',sans-serif;font-size:11px;font-weight:500;letter-spacing:.06em;color:var(--terra);margin-bottom:8px}
+.enq-msg{font-family:'Libre Baskerville',serif;font-style:italic;font-size:13px;color:var(--stone);line-height:1.7;border-top:1px solid var(--border);padding-top:10px;margin-top:2px}
+.enq-unread-dot{display:inline-block;width:7px;height:7px;background:var(--ember);border-radius:50%;margin-left:8px;vertical-align:middle}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;z-index:8000;background:rgba(30,22,14,.6);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal{background:var(--linen);border:1px solid var(--border2);padding:36px;width:440px;max-width:90vw;animation:loginReveal .3s ease;position:relative}
+.modal-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:400;margin-bottom:12px}
+.modal-txt{font-family:'Jost',sans-serif;font-size:13px;color:var(--stone);line-height:1.6;margin-bottom:24px}
+.modal-acts{display:flex;gap:10px;justify-content:flex-end}
+.btn-mc{padding:9px 22px;background:transparent;border:1px solid var(--border2);color:var(--stone);font-family:'Jost',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.btn-mc:hover{border-color:var(--bark)}
+.btn-md{padding:9px 22px;background:#c2440e;border:1px solid #c2440e;color:#fff;font-family:'Jost',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:background .2s}
+.btn-md:hover{background:#a33510}
+
+/* ── MOBILE RESPONSIVE ── */
+@media(max-width:768px){
+  /* nav */
+  nav{padding:0 20px}
+  .nav-links{display:none}
+  .hamburger{display:flex}
+  /* hero */
+  .hero{padding:90px 20px 60px;min-height:100svh}
+  .hero-h1{font-size:clamp(44px,14vw,72px)}
+  .hero-sub{font-size:15px}
+  .btn-fill,.btn-ghost{padding:14px 28px;font-size:11px}
+  /* sections */
+  section.pub{padding:72px 20px}
+  .sec-head{flex-direction:column;align-items:flex-start;gap:16px;margin-bottom:40px}
+  /* contact */
+  .contact-layout{grid-template-columns:1fr;gap:40px}
+  .contact-form{padding:28px 22px}
+  /* stat row */
+  .stat-row{grid-template-columns:1fr 1fr;gap:12px}
+  .stat-num{font-size:28px}
+  /* admin */
+  .adm-sidebar{position:absolute;left:0;top:0;bottom:0;z-index:50;transform:translateX(-100%);box-shadow:4px 0 24px var(--shadow2)}
+  .adm-sidebar.mobile-open{transform:translateX(0)}
+  .adm-menu-btn{display:flex}
+  .adm-body{padding:20px}
+  .af-row{grid-template-columns:1fr}
+  /* footer */
+  footer{padding:24px 20px;flex-direction:column;text-align:center}
+  /* team grid */
+  .team-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px}
+}
+@media(max-width:480px){
+  .hero-h1{font-size:clamp(38px,13vw,56px)}
+  .hero-cta{flex-direction:column}
+  .btn-fill,.btn-ghost{width:100%;text-align:center}
+  .stat-row{grid-template-columns:1fr 1fr}
+  .photo-grid{columns:1}
+}
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLB()">
+  <button class="lb-close" onclick="closeLB()">✕</button>
+  <img id="lbImg" src="" alt="" onclick="event.stopPropagation()">
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal-bg" id="delModal">
+  <div class="modal">
+    <div class="modal-title">Confirm Delete</div>
+    <div class="modal-txt" id="delTxt"></div>
+    <div class="modal-acts">
+      <button class="btn-mc" onclick="closeDelModal()">Cancel</button>
+      <button class="btn-md" onclick="confirmDel()">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     ADMIN OVERLAY  (solid bg, no page visible)
+════════════════════════════════════ -->
+<div class="adm-overlay" id="admOverlay">
+
+  <!-- LOGIN -->
+  <div class="login-wrap" id="loginWrap">
+    <div class="login-card">
+      <div class="login-bar"></div>
+      <div class="login-inner">
+        <div class="login-icon">✦</div>
+        <div class="login-title">Admin Panel</div>
+        <div class="login-sub">Studio Control Centre</div>
+        <div class="adm-field">
+          <label class="adm-label">Username</label>
+          <input class="adm-input" type="text" id="lUser" placeholder="admin" autocomplete="off">
+        </div>
+        <div class="adm-field">
+          <label class="adm-label">Password</label>
+          <input class="adm-input" type="password" id="lPass" placeholder="••••••••">
+        </div>
+        <div class="login-error" id="lErr">✕ Incorrect — try admin / studio123</div>
+        <button class="btn-login" onclick="doLogin()"><span>Enter Studio</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SHELL -->
+  <div class="adm-shell" id="admShell">
+    <!-- Sidebar -->
+    <aside class="adm-sidebar" id="admSidebar">
+      <div class="adm-brand">
+        <div class="adm-brand-mark">✦</div>
+        <div class="adm-brand-txt">Studio Admin</div>
+      </div>
+      <nav class="adm-nav">
+        <div class="adm-grp-label">Overview</div>
+        <div class="adm-nav-item act" onclick="switchP('dashboard',this)">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Dashboard
+        </div>
+        <div class="adm-grp-label">Studio</div>
+        <div class="adm-nav-item" onclick="switchP('info',this)">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Studio Info
+        </div>
+        <div class="adm-nav-item" onclick="switchP('works',this)">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          Works
+        </div>
+        <div class="adm-nav-item" onclick="switchP('team',this)">
+          <svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/><circle cx="19" cy="7" r="2"/><path d="M22 21v-1a2 2 0 00-2-2h-1"/></svg>
+          Team
+        </div>
+        <div class="adm-nav-item" onclick="switchP('contact',this)">
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012.18 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.15a16 16 0 006.94 6.94l1.41-1.41a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          Contact
+        </div>
+        <div class="adm-nav-item" onclick="switchP('enquiries',this)" id="enqNavItem">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Enquiries
+          <span id="enqBadge" style="display:none;margin-left:auto;background:var(--terra);color:var(--cream);font-family:'Jost',sans-serif;font-size:9px;font-weight:500;padding:2px 7px;border-radius:10px;letter-spacing:.06em"></span>
+        </div>
+      </nav>
+      <div class="adm-sidebar-foot">
+        <button class="btn-logout" onclick="doLogout()">↩ Exit Admin</button>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <div class="adm-main">
+      <div class="adm-topbar">
+        <button class="adm-menu-btn" onclick="toggleAdmSidebar()" title="Menu">☰</button>
+        <div>
+          <div class="adm-page-title" id="admTitle">Dashboard</div>
+          <div class="adm-page-sub" id="admSub">Studio overview</div>
+        </div>
+        <div class="adm-badge">Admin</div>
+      </div>
+      <div class="adm-body">
+
+        <!-- DASHBOARD -->
+        <div class="adm-panel act" id="panel-dashboard">
+          <div class="stat-row">
+            <div class="stat-box"><div class="stat-num" id="sPhotos">0</div><div class="stat-lbl">Photos</div></div>
+            <div class="stat-box"><div class="stat-num" id="sTeam">0</div><div class="stat-lbl">Team</div></div>
+            <div class="stat-box"><div class="stat-num" id="sCats">0</div><div class="stat-lbl">Categories</div></div>
+            <div class="stat-box"><div class="stat-num" id="sEnq">0</div><div class="stat-lbl">Enquiries</div></div>
+          </div>
+          <div class="adm-card">
+            <div class="adm-card-hd">Quick Start Guide</div>
+            <div style="display:grid;gap:12px;font-family:'Jost',sans-serif;font-size:13px;color:var(--stone);line-height:1.8">
+              <div><span style="color:var(--terra);font-weight:500">01 —</span> <strong>Studio Info</strong>: set your name and upload logo.</div>
+              <div><span style="color:var(--terra);font-weight:500">02 —</span> <strong>Works</strong>: create categories and upload photos (4K supported).</div>
+              <div><span style="color:var(--terra);font-weight:500">03 —</span> <strong>Team</strong>: add members with photos and roles.</div>
+              <div><span style="color:var(--terra);font-weight:500">04 —</span> <strong>Contact</strong>: publish your studio contact details.</div>
+              <div><span style="color:var(--terra);font-weight:500">05 —</span> <strong>Enquiries</strong>: see messages from visitors.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- STUDIO INFO -->
+        <div class="adm-panel" id="panel-info">
+          <div class="adm-card">
+            <div class="adm-card-hd">Studio Name</div>
+            <div class="af">
+              <label class="al">Name</label>
+              <input class="ai" type="text" id="infoName" placeholder="Enter your studio name…">
+            </div>
+            <button class="btn-save" onclick="saveName()">Save Name</button>
+          </div>
+          <div class="adm-card">
+            <div class="adm-card-hd">Studio Logo</div>
+            <!-- Upload zone (shown when no logo) -->
+            <div class="upload-zone" id="logoZone">
+              <input type="file" accept="image/*,.heic,.heif,.avif,.webp,.svg" id="logoFile" onchange="handleLogo(event)">
+              <div class="up-icon">⊕</div>
+              <div class="up-txt">Click or drag to upload logo</div>
+              <div class="up-hint">PNG, JPG, SVG, WebP, AVIF, HEIC — any size</div>
+            </div>
+            <!-- Logo preview + remove/replace controls -->
+            <div class="logo-prev-area" id="logoPrevArea">
+              <img id="logoPreviewImg" src="" alt="logo preview">
+              <div class="logo-actions">
+                <button class="btn-logo-action" onclick="replaceLogo()">Replace Logo</button>
+                <button class="btn-logo-action btn-logo-remove" onclick="removeLogo()">Remove Logo</button>
+              </div>
+              <!-- hidden file input for replacing -->
+              <input type="file" accept="image/*,.heic,.heif,.avif,.webp,.svg" id="logoReplace" style="display:none" onchange="handleLogoReplace(event)">
+            </div>
+          </div>
+        </div>
+
+        <!-- WORKS -->
+        <div class="adm-panel" id="panel-works">
+          <div class="adm-card">
+            <div class="adm-card-hd">
+              <span>Portfolio Works</span>
+              <span class="badge" id="wCount">0 photos</span>
+            </div>
+            <div class="item-list" id="workList"></div>
+            <div class="af-sep">— Add New Photos —</div>
+            <div class="af-row">
+              <div class="af">
+                <label class="al">Category</label>
+                <select class="ai" id="wCatSel">
+                  <option value="">Select category…</option>
+                  <option>Portraits</option><option>Landscapes</option><option>Architecture</option>
+                  <option>Fashion</option><option>Commercial</option><option>Wedding</option>
+                  <option>Street</option><option>Fine Art</option><option>Product</option><option>Events</option>
+                </select>
+              </div>
+              <div class="af">
+                <label class="al">Custom Category</label>
+                <input class="ai" type="text" id="wCatCustom" placeholder="Or type your own…">
+              </div>
+            </div>
+            <div class="af">
+              <label class="al">Upload Photos (4K &amp; all formats)</label>
+              <div class="upload-zone" id="wZone">
+                <input type="file" accept="image/*,.heic,.heif,.avif,.webp,.tiff,.tif" multiple id="wFile" onchange="handleWorkFiles(event)">
+                <div class="up-icon">⊕</div>
+                <div class="up-txt" id="wZoneTxt">Click or drag photos here</div>
+                <div class="up-hint">JPG, PNG, WebP, AVIF, HEIC, TIFF — 4K &amp; higher fully supported</div>
+              </div>
+            </div>
+            <button class="btn-add" onclick="addWorks()">Add to Portfolio</button>
+          </div>
+        </div>
+
+        <!-- TEAM -->
+        <div class="adm-panel" id="panel-team">
+          <div class="adm-card">
+            <div class="adm-card-hd">
+              <span>Team Members</span>
+              <span class="badge" id="tCount">0 members</span>
+            </div>
+            <div class="item-list" id="teamList"></div>
+            <div class="af-sep">— Add New Member —</div>
+            <div class="af-row">
+              <div class="af">
+                <label class="al">Full Name</label>
+                <input class="ai" type="text" id="mName" placeholder="Member name…">
+              </div>
+              <div class="af">
+                <label class="al">Designation</label>
+                <input class="ai" type="text" id="mRole" placeholder="e.g. Lead Photographer…">
+              </div>
+            </div>
+            <div class="af">
+              <label class="al">Profile Photo (optional)</label>
+              <div class="upload-zone" style="padding:24px">
+                <input type="file" accept="image/*,.heic,.heif,.avif,.webp" id="mFile" onchange="handleMemberFile(event)">
+                <div class="up-txt">Upload profile photo</div>
+                <div class="up-hint">Any format, any resolution</div>
+              </div>
+              <div id="mPrev" style="display:none;margin-top:12px;text-align:center">
+                <img id="mPreviewImg" src="" alt="" style="width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid var(--dune)">
+              </div>
+            </div>
+            <button class="btn-add" onclick="addMember()">Add Member</button>
+          </div>
+        </div>
+
+        <!-- CONTACT -->
+        <div class="adm-panel" id="panel-contact">
+          <div class="adm-card">
+            <div class="adm-card-hd">Contact Information</div>
+            <div style="display:grid;gap:16px">
+              <div class="af"><label class="al">Email</label><input class="ai" type="email" id="cEmail" placeholder="hello@yourstudio.com"></div>
+              <div class="af"><label class="al">Phone</label><input class="ai" type="tel" id="cPhone" placeholder="+91 98765 43210"></div>
+              <div class="af"><label class="al">Address</label><input class="ai" type="text" id="cAddr" placeholder="123 Studio Lane, Chennai, India"></div>
+              <div class="af"><label class="al">Website</label><input class="ai" type="url" id="cWeb" placeholder="https://yourstudio.com"></div>
+              <div class="af"><label class="al">Instagram</label><input class="ai" type="text" id="cInsta" placeholder="@yourstudio"></div>
+            </div>
+            <div style="margin-top:20px"><button class="btn-save" onclick="saveContact()">Save Contact Info</button></div>
+          </div>
+        </div>
+
+        <!-- ENQUIRIES (Customer Messages) -->
+        <div class="adm-panel" id="panel-enquiries">
+          <div class="adm-card">
+            <div class="adm-card-hd">
+              <span>Customer Enquiries</span>
+              <span class="badge" id="enqCount">0 messages</span>
+            </div>
+            <div id="enqList">
+              <div class="enq-empty">No enquiries yet. Messages from the contact form will appear here.</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- adm-body -->
+    </div><!-- adm-main -->
+  </div><!-- adm-shell -->
+</div><!-- adm-overlay -->
+
+<!-- ═══════════════════════════════════
+     PUBLIC WEBSITE
+════════════════════════════════════ -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-mark" id="navMark">
+      <img id="navLogo" alt="logo">
+      <span id="navMarkLetter">✦</span>
+    </div>
+    <span class="nav-name" id="navName">Studio</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <div class="theme-pill" onclick="toggleTheme()" title="Toggle theme"></div>
+    <button class="btn-admin" onclick="openAdmin()"><span>Admin</span></button>
+    <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#work" onclick="closeMobileMenu()">Work</a>
+  <a href="#team" onclick="closeMobileMenu()">Team</a>
+  <a href="#contact" onclick="closeMobileMenu()">Contact</a>
+  <div class="mobile-menu-actions">
+    <div class="theme-pill" onclick="toggleTheme()" title="Toggle theme"></div>
+    <button class="btn-admin" onclick="closeMobileMenu();openAdmin()"><span>Admin</span></button>
+  </div>
+</div>
+
+<!-- HERO -->
+<section style="min-height:100vh;display:flex;align-items:center;padding:100px 52px 80px;position:relative;overflow:hidden;border-bottom:1px solid var(--border)">
+  <div class="hero-texture"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Creative Studio</div>
+    <h1 class="hero-h1">We craft<br><em>images</em><br>that speak.</h1>
+    <p class="hero-sub" id="heroDesc">A multidisciplinary creative studio dedicated to visual storytelling, photography, and artful design.</p>
+    <div class="hero-cta">
+      <a href="#work" class="btn-fill"><span>View Portfolio</span></a>
+      <a href="#contact" class="btn-ghost">Get in Touch</a>
+    </div>
+  </div>
+  <!-- Scroll indicator REMOVED as requested -->
+</section>
+
+<!-- WORK -->
+<section class="pub" id="work">
+  <div class="sec-head">
+    <div>
+      <div class="sec-tag">Portfolio</div>
+      <h2 class="sec-title">Selected <em>Works</em></h2>
+    </div>
+  </div>
+  <div class="filter-bar" id="filterBar">
+    <button class="filter-btn active" data-cat="all" onclick="filterWorks('all',this)">All</button>
+  </div>
+  <div class="photo-grid" id="photoGrid">
+    <div class="work-empty">No works yet — visit the Admin panel to upload your portfolio.</div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="pub" id="team">
+  <div class="sec-head">
+    <div>
+      <div class="sec-tag">The People</div>
+      <h2 class="sec-title">Our <em>Team</em></h2>
+    </div>
+  </div>
+  <div class="team-grid" id="teamGrid">
+    <div style="font-family:'Libre Baskerville',serif;font-style:italic;font-size:14px;color:var(--fog);padding:24px 0">
+      No team members yet — add them via the Admin panel.
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="pub" id="contact">
+  <div class="sec-head">
+    <div>
+      <div class="sec-tag">Get in Touch</div>
+      <h2 class="sec-title">Let's <em>Connect</em></h2>
+    </div>
+  </div>
+  <div class="contact-layout">
+    <div id="contactInfo">
+      <div style="font-family:'Libre Baskerville',serif;font-style:italic;font-size:14px;color:var(--fog)">
+        Contact details will appear here once set in the Admin panel.
+      </div>
+    </div>
+    <div class="contact-form">
+      <div style="font-family:'Playfair Display',serif;font-size:24px;font-weight:400;margin-bottom:24px">Send a message</div>
+      <div class="form-row"><label class="f-label">Your Name</label><input class="f-input" type="text" id="cfName" placeholder="Full name"></div>
+      <div class="form-row"><label class="f-label">Email</label><input class="f-input" type="email" id="cfEmail" placeholder="your@email.com"></div>
+      <div class="form-row"><label class="f-label">Message</label><textarea class="f-input" id="cfMsg" placeholder="Tell us about your project…"></textarea></div>
+      <button class="btn-fill" style="width:100%;margin-top:8px" onclick="submitEnquiry()"><span>Send Message</span></button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-copy">© 2025 <span id="footName">Studio</span>. All rights reserved.</div>
+  <div class="foot-copy"><span class="foot-mark">✦</span> Crafted with care</div>
+</footer>
+
+<script>
+/* ═══════════ STATE ═══════════ */
+const S = {
+  name:'Studio', logo:null,
+  works:[], team:[], contact:{}, enquiries:[]
+};
+let pendingFiles=[], pendingMemberPhoto=null;
+let delType=null, delIdx=null;
+
+/* ── THEME ── */
+function toggleTheme(){
+  const h=document.documentElement;
+  h.dataset.theme=h.dataset.theme==='dark'?'light':'dark';
+}
+
+/* ── TOAST ── */
+function toast(msg,err){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast'+(err?' err':'');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+/* ── MOBILE NAV ── */
+function toggleMobileMenu(){
+  const m=document.getElementById('mobileMenu');
+  const h=document.getElementById('hamburger');
+  const open=m.classList.toggle('open');
+  h.classList.toggle('open',open);
+}
+function closeMobileMenu(){
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}
+
+/* ── ADMIN OPEN/CLOSE ── */
+function openAdmin(){
+  document.getElementById('admOverlay').classList.add('open');
+  closeMobileMenu();
+}
+function doLogin(){
+  const u=document.getElementById('lUser').value;
+  const p=document.getElementById('lPass').value;
+  if(u==='admin'&&p==='studio123'){
+    document.getElementById('loginWrap').style.display='none';
+    document.getElementById('admShell').classList.add('open');
+    refreshStats();
+    // prefill fields
+    const c=S.contact;
+    if(c.email)document.getElementById('cEmail').value=c.email;
+    if(c.phone)document.getElementById('cPhone').value=c.phone;
+    if(c.addr) document.getElementById('cAddr').value=c.addr;
+    if(c.web)  document.getElementById('cWeb').value=c.web;
+    if(c.insta)document.getElementById('cInsta').value=c.insta;
+    if(S.name!=='Studio')document.getElementById('infoName').value=S.name;
+  }else{
+    document.getElementById('lErr').classList.add('show');
+    ['lUser','lPass'].forEach(id=>{
+      const el=document.getElementById(id);
+      el.classList.add('err');
+      setTimeout(()=>el.classList.remove('err'),1200);
+    });
+  }
+}
+document.getElementById('lPass').addEventListener('keyup',e=>{if(e.key==='Enter')doLogin()});
+document.getElementById('lUser').addEventListener('keyup',e=>{if(e.key==='Enter')doLogin()});
+
+function doLogout(){
+  document.getElementById('admShell').classList.remove('open');
+  document.getElementById('loginWrap').style.display='';
+  document.getElementById('admOverlay').classList.remove('open');
+  document.getElementById('lUser').value='';
+  document.getElementById('lPass').value='';
+  document.getElementById('lErr').classList.remove('show');
+  document.getElementById('admSidebar').classList.remove('mobile-open');
+}
+
+/* ── MOBILE ADMIN SIDEBAR ── */
+function toggleAdmSidebar(){
+  document.getElementById('admSidebar').classList.toggle('mobile-open');
+}
+// close sidebar when clicking main area on mobile
+document.getElementById('admShell').addEventListener('click',function(e){
+  if(window.innerWidth<=768&&!e.target.closest('.adm-sidebar')){
+    document.getElementById('admSidebar').classList.remove('mobile-open');
+  }
+});
+
+/* ── PANEL SWITCH ── */
+const pmeta={
+  dashboard:['Dashboard','Studio overview'],
+  info:['Studio Info','Name and logo settings'],
+  works:['Works','Portfolio photos by category'],
+  team:['Team','Members and designations'],
+  contact:['Contact','Studio contact information'],
+  enquiries:['Enquiries','Customer messages'],
+};
+function switchP(id,el){
+  document.querySelectorAll('.adm-panel').forEach(p=>p.classList.remove('act'));
+  document.querySelectorAll('.adm-nav-item').forEach(n=>n.classList.remove('act'));
+  document.getElementById('panel-'+id).classList.add('act');
+  el.classList.add('act');
+  document.getElementById('admTitle').textContent=pmeta[id][0];
+  document.getElementById('admSub').textContent=pmeta[id][1];
+  if(id==='dashboard')refreshStats();
+  if(id==='enquiries')markEnqRead();
+  // close sidebar on mobile after nav
+  if(window.innerWidth<=768)document.getElementById('admSidebar').classList.remove('mobile-open');
+}
+
+/* ── STATS ── */
+function refreshStats(){
+  document.getElementById('sPhotos').textContent=S.works.length;
+  document.getElementById('sTeam').textContent=S.team.length;
+  document.getElementById('sCats').textContent=[...new Set(S.works.map(w=>w.cat))].length;
+  document.getElementById('sEnq').textContent=S.enquiries.length;
+}
+
+/* ── STUDIO INFO ── */
+function saveName(){
+  const v=document.getElementById('infoName').value.trim();
+  if(!v){toast('Enter a studio name.',true);return;}
+  S.name=v;
+  document.getElementById('navName').textContent=v;
+  document.getElementById('footName').textContent=v;
+  document.title=v;
+  toast('Studio name saved!');
+  refreshStats();
+}
+
+/* ── LOGO ── */
+function handleLogo(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  readLogoFile(file);
+}
+function readLogoFile(file){
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    S.logo=ev.target.result;
+    applyLogo(S.logo);
+    toast('Logo uploaded!');
+  };
+  reader.readAsDataURL(file);
+}
+function applyLogo(src){
+  // nav
+  const img=document.getElementById('navLogo');
+  img.src=src;img.classList.add('show');
+  // preview area
+  document.getElementById('logoPreviewImg').src=src;
+  document.getElementById('logoPrevArea').style.display='block';
+  document.getElementById('logoZone').style.display='none';
+}
+function replaceLogo(){
+  document.getElementById('logoReplace').click();
+}
+function handleLogoReplace(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  readLogoFile(file);
+}
+function removeLogo(){
+  S.logo=null;
+  const img=document.getElementById('navLogo');
+  img.src='';img.classList.remove('show');
+  document.getElementById('logoPreviewImg').src='';
+  document.getElementById('logoPrevArea').style.display='none';
+  document.getElementById('logoZone').style.display='block';
+  document.getElementById('logoFile').value='';
+  toast('Logo removed.');
+}
+
+/* ── WORKS ── */
+function handleWorkFiles(e){
+  pendingFiles=Array.from(e.target.files);
+  document.getElementById('wZoneTxt').textContent=pendingFiles.length+' file(s) selected — ready to add';
+}
+function addWorks(){
+  const cat=document.getElementById('wCatCustom').value.trim()||document.getElementById('wCatSel').value;
+  if(!cat){toast('Choose or enter a category.',true);return;}
+  if(!pendingFiles.length){toast('Upload at least one photo.',true);return;}
+  let done=0;
+  pendingFiles.forEach(file=>{
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      S.works.push({cat,src:ev.target.result,name:file.name});
+      done++;
+      if(done===pendingFiles.length){
+        pendingFiles=[];
+        document.getElementById('wFile').value='';
+        document.getElementById('wCatSel').value='';
+        document.getElementById('wCatCustom').value='';
+        document.getElementById('wZoneTxt').textContent='Click or drag photos here';
+        renderAdminWorks();renderPublicWorks();refreshStats();
+        toast(done+' photo(s) added!');
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+}
+function renderAdminWorks(){
+  const list=document.getElementById('workList');
+  document.getElementById('wCount').textContent=S.works.length+' photo'+(S.works.length!==1?'s':'');
+  if(!S.works.length){list.innerHTML='<div class="empty-msg">No works yet.</div>';return;}
+  list.innerHTML='';
+  S.works.forEach((w,i)=>{
+    const row=document.createElement('div');
+    row.className='item-row';row.style.animationDelay=(i*.04)+'s';
+    row.innerHTML=`<div class="item-thumb"><img src="${w.src}" alt="${esc(w.cat)}"></div><div class="item-body"><div class="item-name">${esc(w.cat)}</div><div class="item-sub">${esc(w.name.length>36?w.name.substring(0,35)+'…':w.name)}</div></div><div class="item-acts"><button class="btn-del" onclick="openDel('work',${i})">✕</button></div>`;
+    list.appendChild(row);
+  });
+}
+function renderPublicWorks(){
+  const grid=document.getElementById('photoGrid');
+  if(!S.works.length){
+    grid.innerHTML='<div class="work-empty">No works yet — visit the Admin panel to upload your portfolio.</div>';
+    updateFilters([]);return;
+  }
+  grid.innerHTML=S.works.map((w,i)=>`
+    <div class="photo-item" data-cat="${esc(w.cat)}" style="animation-delay:${i*.05}s">
+      <img src="${w.src}" alt="${esc(w.cat)}" loading="lazy" onclick="openLB(this.src)">
+      <div class="photo-overlay"><div class="photo-cat">${esc(w.cat)}</div></div>
+    </div>`).join('');
+  updateFilters(['all',...new Set(S.works.map(w=>w.cat))]);
+}
+function updateFilters(cats){
+  const bar=document.getElementById('filterBar');
+  if(!cats.length){bar.innerHTML='<button class="filter-btn active" onclick="filterWorks(\'all\',this)">All</button>';return;}
+  bar.innerHTML=cats.map(c=>`<button class="filter-btn ${c==='all'?'active':''}" data-cat="${esc(c)}" onclick="filterWorks('${esc(c)}',this)">${c==='all'?'All':esc(c)}</button>`).join('');
+}
+function filterWorks(cat,btn){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.photo-item').forEach(item=>{
+    item.style.display=(cat==='all'||item.dataset.cat===cat)?'':'none';
+  });
+}
+
+/* ── LIGHTBOX ── */
+function openLB(src){
+  document.getElementById('lbImg').src=src;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLB(){
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLB();});
+
+/* ── TEAM ── */
+function handleMemberFile(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    pendingMemberPhoto=ev.target.result;
+    document.getElementById('mPreviewImg').src=pendingMemberPhoto;
+    document.getElementById('mPrev').style.display='block';
+  };
+  reader.readAsDataURL(file);
+}
+function addMember(){
+  const name=document.getElementById('mName').value.trim();
+  const role=document.getElementById('mRole').value.trim();
+  if(!name||!role){toast('Fill in name and designation.',true);return;}
+  S.team.push({name,role,photo:pendingMemberPhoto});
+  document.getElementById('mName').value='';
+  document.getElementById('mRole').value='';
+  document.getElementById('mFile').value='';
+  document.getElementById('mPrev').style.display='none';
+  pendingMemberPhoto=null;
+  renderAdminTeam();renderPublicTeam();refreshStats();
+  toast('Team member added!');
+}
+function renderAdminTeam(){
+  const list=document.getElementById('teamList');
+  document.getElementById('tCount').textContent=S.team.length+' member'+(S.team.length!==1?'s':'');
+  if(!S.team.length){list.innerHTML='<div class="empty-msg">No members yet.</div>';return;}
+  list.innerHTML='';
+  S.team.forEach((m,i)=>{
+    const row=document.createElement('div');row.className='item-row';row.style.animationDelay=(i*.04)+'s';
+    const thumb=m.photo?`<img src="${m.photo}" alt="${esc(m.name)}">`:`<div class="item-init">${m.name.charAt(0)}</div>`;
+    row.innerHTML=`<div class="item-thumb">${thumb}</div><div class="item-body"><div class="item-name">${esc(m.name)}</div><div class="item-sub">${esc(m.role)}</div></div><div class="item-acts"><button class="btn-del" onclick="openDel('member',${i})">✕</button></div>`;
+    list.appendChild(row);
+  });
+}
+function renderPublicTeam(){
+  const grid=document.getElementById('teamGrid');
+  if(!S.team.length){
+    grid.innerHTML='<div style="font-family:\'Libre Baskerville\',serif;font-style:italic;font-size:14px;color:var(--fog);padding:24px 0">No team members yet.</div>';return;
+  }
+  grid.innerHTML=S.team.map((m,i)=>{
+    const ph=m.photo?`<img src="${m.photo}" alt="${esc(m.name)}">`:`<div class="team-initials">${m.name.charAt(0)}</div>`;
+    return `<div class="team-card" style="animation-delay:${i*.08}s"><div class="team-photo">${ph}</div><div class="team-info"><div class="team-name">${esc(m.name)}</div><div class="team-role">${esc(m.role)}</div></div></div>`;
+  }).join('');
+}
+
+/* ── CONTACT ── */
+function saveContact(){
+  S.contact={
+    email:document.getElementById('cEmail').value.trim(),
+    phone:document.getElementById('cPhone').value.trim(),
+    addr: document.getElementById('cAddr').value.trim(),
+    web:  document.getElementById('cWeb').value.trim(),
+    insta:document.getElementById('cInsta').value.trim(),
+  };
+  renderPublicContact();
+  toast('Contact info saved!');
+}
+function renderPublicContact(){
+  const c=S.contact;
+  const fields=[
+    {icon:'✉',label:'Email',val:c.email},
+    {icon:'☎',label:'Phone',val:c.phone},
+    {icon:'◉',label:'Address',val:c.addr},
+    {icon:'↗',label:'Website',val:c.web},
+    {icon:'◈',label:'Instagram',val:c.insta},
+  ].filter(f=>f.val);
+  const wrap=document.getElementById('contactInfo');
+  if(!fields.length){
+    wrap.innerHTML='<div style="font-family:\'Libre Baskerville\',serif;font-style:italic;font-size:14px;color:var(--fog)">Contact details will appear here once set in the Admin panel.</div>';return;
+  }
+  wrap.innerHTML=fields.map(f=>`
+    <div class="contact-item">
+      <div class="contact-icon">${f.icon}</div>
+      <div><div class="c-lbl">${f.label}</div><div class="c-val">${esc(f.val)}</div></div>
+    </div>`).join('');
+}
+
+/* ── ENQUIRIES ── */
+function submitEnquiry(){
+  const name=document.getElementById('cfName').value.trim();
+  const email=document.getElementById('cfEmail').value.trim();
+  const msg=document.getElementById('cfMsg').value.trim();
+  if(!name){toast('Please enter your name.',true);return;}
+  if(!email){toast('Please enter your email.',true);return;}
+  if(!msg){toast('Please write a message.',true);return;}
+  // basic email check
+  if(!email.includes('@')){toast('Please enter a valid email.',true);return;}
+
+  const enq={
+    id:Date.now(),
+    name,email,msg,
+    time:new Date().toLocaleString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),
+    unread:true
+  };
+  S.enquiries.push(enq);
+
+  // clear form
+  document.getElementById('cfName').value='';
+  document.getElementById('cfEmail').value='';
+  document.getElementById('cfMsg').value='';
+
+  renderEnquiries();
+  updateEnqBadge();
+  refreshStats();
+  toast('✓ Message sent! We\'ll be in touch soon.');
+}
+
+function renderEnquiries(){
+  const list=document.getElementById('enqList');
+  document.getElementById('enqCount').textContent=S.enquiries.length+' message'+(S.enquiries.length!==1?'s':'');
+  if(!S.enquiries.length){
+    list.innerHTML='<div class="enq-empty">No enquiries yet. Messages from the contact form will appear here.</div>';return;
+  }
+  // newest first
+  const sorted=[...S.enquiries].reverse();
+  list.innerHTML=sorted.map((e,i)=>`
+    <div class="enq-row ${e.unread?'unread':''}" style="animation-delay:${i*.05}s">
+      <div class="enq-meta">
+        <div class="enq-name">${esc(e.name)}${e.unread?'<span class="enq-unread-dot"></span>':''}</div>
+        <div class="enq-time">${e.time}</div>
+      </div>
+      <div class="enq-email">${esc(e.email)}</div>
+      <div class="enq-msg">${esc(e.msg)}</div>
+    </div>`).join('');
+}
+
+function updateEnqBadge(){
+  const unread=S.enquiries.filter(e=>e.unread).length;
+  const badge=document.getElementById('enqBadge');
+  if(unread>0){badge.style.display='inline-block';badge.textContent=unread;}
+  else badge.style.display='none';
+}
+
+function markEnqRead(){
+  S.enquiries.forEach(e=>e.unread=false);
+  updateEnqBadge();
+  renderEnquiries();
+}
+
+/* ── DELETE ── */
+function openDel(type,idx){
+  delType=type;delIdx=idx;
+  const label=type==='work'
+    ?`the photo in category <strong>${esc(S.works[idx].cat)}</strong>`
+    :`team member <strong>${esc(S.team[idx].name)}</strong>`;
+  document.getElementById('delTxt').innerHTML=`Are you sure you want to remove ${label}? This cannot be undone.`;
+  document.getElementById('delModal').classList.add('open');
+}
+function closeDelModal(){document.getElementById('delModal').classList.remove('open')}
+function confirmDel(){
+  if(delType==='work'){S.works.splice(delIdx,1);renderAdminWorks();renderPublicWorks();}
+  else{S.team.splice(delIdx,1);renderAdminTeam();renderPublicTeam();}
+  refreshStats();closeDelModal();toast('Deleted.');
+}
+
+/* ── SCROLL REVEAL ── */
+const sObserver=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis');});
+},{threshold:0.08});
+document.querySelectorAll('section.pub').forEach(s=>sObserver.observe(s));
+
+/* ── UTIL ── */
+function esc(str){
+  if(!str)return'';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+/* ── INIT ── */
+renderAdminWorks();
+renderAdminTeam();
+renderEnquiries();
+</script>
+</body>
+</html>
