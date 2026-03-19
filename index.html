@@ -316,7 +316,7 @@ footer{border-top:1px solid var(--border);padding:36px 52px;display:flex;align-i
 
 /* ── LOADING ── */
 .loading-screen{position:fixed;inset:0;z-index:10000;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;transition:opacity .7s ease}
-.loading-screen.out{opacity:0;pointer-events:none}
+.loading-screen.out{opacity:0;pointer-events:none;visibility:hidden}
 .loading-studio-name{font-family:'DM Serif Display',serif;font-size:clamp(40px,9vw,88px);font-weight:400;color:var(--coal);letter-spacing:-.01em;animation:riseUp .8s .1s both;background:linear-gradient(135deg,var(--coal) 40%,var(--terra));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .loading-mark{font-size:20px;color:var(--terra);animation:pulse 2s ease-in-out infinite;margin-top:-6px}
 .loading-track{width:160px;height:2px;background:var(--border2);border-radius:2px;overflow:hidden;margin-top:4px}
@@ -381,7 +381,7 @@ footer{border-top:1px solid var(--border);padding:36px 52px;display:flex;align-i
 
 /* SIDEBAR — glassmorphism */
 .adm-sidebar{
-  width:252px;flex-shrink:0;z-index:50;position:relative;
+  width:256px;flex-shrink:0;z-index:50;position:relative;
   background:var(--glass);border-right:1px solid var(--gborder);
   backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);
   display:flex;flex-direction:column;height:100vh;overflow-y:auto;
@@ -392,22 +392,21 @@ footer{border-top:1px solid var(--border);padding:36px 52px;display:flex;align-i
 .adm-brand-txt{font-family:'DM Serif Display',serif;font-size:16px;color:var(--coal)}
 .adm-brand-close{margin-left:auto;display:none;background:var(--glass2);border:1px solid var(--gborder);border-radius:8px;color:var(--fog);font-size:16px;cursor:pointer;padding:4px 8px;transition:all .2s}
 .adm-brand-close:hover{color:var(--terra);border-color:var(--terra)}
-.adm-nav{padding:12px 10px;flex:1;overflow-y:auto}
-.adm-grp-label{font-family:'Outfit',sans-serif;font-size:9px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--fog);padding:12px 12px 6px}
+.adm-nav{padding:12px 8px;flex:1;overflow-y:auto;display:block}
+.adm-grp-label{font-family:'Outfit',sans-serif;font-size:9px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--fog);padding:12px 14px 6px;display:block;width:100%}
 .adm-nav-item{
-  display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;
+  display:flex;flex-direction:row;align-items:center;gap:12px;
+  width:100%;padding:12px 14px;cursor:pointer;
   font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;color:var(--stone);
-  transition:all .22s;border-radius:12px;margin-bottom:3px;
-  user-select:none;-webkit-tap-highlight-color:transparent;position:relative;overflow:hidden;
+  transition:background .2s,color .2s;border-radius:12px;margin-bottom:3px;
+  user-select:none;-webkit-tap-highlight-color:transparent;
+  box-sizing:border-box;
 }
-.adm-nav-item::before{content:'';position:absolute;inset:0;background:rgba(185,61,12,.1);opacity:0;border-radius:12px;transition:opacity .2s}
-.adm-nav-item:hover{color:var(--terra)}
-.adm-nav-item:hover::before{opacity:1}
-.adm-nav-item.act{color:var(--terra);background:rgba(185,61,12,.12);font-weight:600}
-.adm-nav-item.act::before{opacity:0}
-.adm-nav-item svg{width:15px;height:15px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.5;position:relative;z-index:1}
-.adm-nav-item span{position:relative;z-index:1}
-.enq-pill{margin-left:auto;background:var(--terra);color:#fff;font-family:'Outfit',sans-serif;font-size:9px;font-weight:600;padding:2px 8px;border-radius:10px;display:none;position:relative;z-index:1}
+.adm-nav-item:hover{color:var(--terra);background:rgba(185,61,12,.1)}
+.adm-nav-item.act{color:var(--terra);background:rgba(185,61,12,.14);font-weight:600}
+.adm-nav-item svg{width:16px;height:16px;min-width:16px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.5}
+.adm-nav-item>.nav-text{font-family:'Outfit',sans-serif;font-size:13px;font-weight:inherit;color:inherit;flex:1;white-space:nowrap}
+.enq-pill{margin-left:auto;background:var(--terra);color:#fff;font-family:'Outfit',sans-serif;font-size:9px;font-weight:600;padding:2px 8px;border-radius:10px;display:none;flex-shrink:0}
 .adm-sidebar-foot{padding:16px 10px;border-top:1px solid var(--gborder);flex-shrink:0}
 .btn-logout{
   width:100%;padding:11px;border-radius:12px;
@@ -595,20 +594,30 @@ textarea.ai{resize:vertical;min-height:60px}
   .form-row-2{grid-template-columns:1fr}
   .stat-row{grid-template-columns:1fr 1fr;gap:10px}
   .stat-num{font-size:28px}
-  .adm-sidebar{position:absolute;left:0;top:0;bottom:0;transform:translateX(-100%);width:260px;z-index:100;height:100vh;overflow-y:auto}
-  .adm-sidebar.open{transform:translateX(0);box-shadow:4px 0 40px var(--shadow2)}
+  .adm-sidebar{position:absolute;left:0;top:0;bottom:0;transform:translateX(-260%) !important;width:260px;z-index:200;height:100%;overflow-y:auto;box-shadow:none}
+  .adm-sidebar.open{transform:translateX(0) !important;box-shadow:4px 0 48px var(--shadow2)}
+  .adm-shell{overflow:hidden;position:relative}
+  .adm-main{width:100% !important;flex:1 1 100% !important}
   .adm-brand-close{display:flex;align-items:center;justify-content:center}
   .adm-menu-btn{display:flex;align-items:center}
-  .adm-nav{display:block!important;visibility:visible!important}
-  .adm-nav-item{display:flex!important;visibility:visible!important;padding:14px 16px;font-size:14px}
-  .adm-nav-item svg{width:17px;height:17px}
-  .adm-sidebar-foot{display:block!important}
+  .adm-nav{display:block!important;width:100%!important}
+  .adm-nav-item{display:flex!important;flex-direction:row!important;align-items:center!important;width:100%!important;gap:12px!important;padding:14px 16px!important;font-size:14px!important;box-sizing:border-box!important}
+  .adm-nav-item svg{width:18px!important;height:18px!important;min-width:18px!important;max-width:18px!important;flex-shrink:0!important}
+  .adm-nav-item>.nav-text{display:block!important;font-size:14px!important;color:inherit!important;white-space:nowrap!important;flex:1!important;overflow:hidden!important;text-overflow:ellipsis!important}
+  .adm-grp-label{display:block!important;width:100%!important}
+  .adm-sidebar-foot{display:block!important;width:100%!important}
   .adm-body{padding:18px 14px}
   .af-row{grid-template-columns:1fr}
   footer{padding:24px 20px;flex-direction:column;text-align:center}
-  .team-grid{grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:18px}
-  .team-card{padding:28px 16px 22px}
-  .team-photo-wrap{width:90px;height:90px}
+  .team-grid{grid-template-columns:1fr;gap:20px;max-width:420px;margin:0 auto}
+  .team-card{
+    display:flex;flex-direction:row;align-items:center;
+    padding:24px 28px;text-align:left;gap:24px;
+    border-radius:18px;
+  }
+  .team-photo-wrap{width:90px;height:90px;flex-shrink:0;margin:0}
+  .team-info{text-align:left;flex:1}
+  .team-note{text-align:left}
 }
 @media(max-width:480px){
   .hero-h1{font-size:clamp(38px,12vw,56px)}
@@ -701,29 +710,29 @@ textarea.ai{resize:vertical;min-height:60px}
         <div class="adm-brand-txt">Studio Admin</div>
         <button class="adm-brand-close" onclick="closeSidebar()">✕</button>
       </div>
-      <nav class="adm-nav">
+      <div class="adm-nav">
         <div class="adm-grp-label">Overview</div>
         <div class="adm-nav-item act" onclick="switchP('dashboard',this)">
-          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span>Dashboard</span>
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="nav-text">Dashboard</span>
         </div>
         <div class="adm-grp-label">Studio</div>
         <div class="adm-nav-item" onclick="switchP('info',this)">
-          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>Studio Info</span>
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span class="nav-text">Studio Info</span>
         </div>
         <div class="adm-nav-item" onclick="switchP('works',this)">
-          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>Works</span>
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span class="nav-text">Works</span>
         </div>
         <div class="adm-nav-item" onclick="switchP('team',this)">
-          <svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/><circle cx="19" cy="7" r="2"/><path d="M22 21v-1a2 2 0 00-2-2h-1"/></svg><span>Team</span>
+          <svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/><circle cx="19" cy="7" r="2"/><path d="M22 21v-1a2 2 0 00-2-2h-1"/></svg><span class="nav-text">Team</span>
         </div>
         <div class="adm-nav-item" onclick="switchP('contact',this)">
-          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.13 2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.15a16 16 0 006.94 6.94l1.41-1.41a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg><span>Contact</span>
+          <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.01 1.13 2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 8.15a16 16 0 006.94 6.94l1.41-1.41a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg><span class="nav-text">Contact</span>
         </div>
         <div class="adm-nav-item" onclick="switchP('enquiries',this)">
-          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span>Enquiries</span>
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span class="nav-text">Enquiries</span>
           <span class="enq-pill" id="enqPill"></span>
         </div>
-      </nav>
+      </div>
       <div class="adm-sidebar-foot">
         <button class="btn-logout" onclick="doLogout()">↩ Exit Admin</button>
       </div>
@@ -979,7 +988,11 @@ function showLoadingError(msg){
   a.style.cssText='display:block;margin-top:10px;color:var(--terra);font-size:12px';
   el.appendChild(a);
 }
-function hideLoading(){const ls=document.getElementById('loadingScreen');ls.classList.add('out');setTimeout(()=>ls.style.display='none',700)}
+function hideLoading(){
+  const ls=document.getElementById('loadingScreen');
+  ls.classList.add('out');
+  setTimeout(()=>{ls.style.display='none';ls.style.visibility='hidden'},700);
+}
 function skipAndContinue(){fbOk=false;setSyncDot('err');hideLoading();toast('Running without Firebase — data not saved permanently',true)}
 
 /* ═══ LOAD ALL ═══ */
